@@ -13,7 +13,7 @@
 - **Terminal Interactiva:** Ejecución de comandos del sistema con persistencia de directorios (`cd` funcional).
 - **Gestor de Carga (Uploader):** Sube herramientas o scripts directamente al servidor desde el panel lateral.
 - **Prompt Dinámico:** Visualización en tiempo real del directorio actual (CWD) en la línea de comandos.
-- **Dashboad de Sistema:** Monitorización rápida de IP local, usuario actual, versión de PHP y sistema operativo.
+- **Dashboad de Sistema:** Monitorización rápida de IP local, versión de PHP y sistema operativo.
 - **UX Optimizada:** - Corrección de bug de scroll mediante persistencia en `localStorage`.
 
 ---
