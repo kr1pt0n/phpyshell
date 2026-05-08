@@ -23,7 +23,7 @@
 1. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/kr1pt0n/f0r3x.git
-   cd f0r3x-panel
+   cd f0r3x
 
 2. **Mover al servidor web:**
    ```bash
