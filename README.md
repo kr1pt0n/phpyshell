@@ -25,5 +25,18 @@
    git clone https://github.com/kr1pt0n/f0r3x.git
    cd f0r3x-panel
 
+2. **Mover al servidor web:**
+   ```bash
+   sudo cp f0r3x.php /var/www/html/
 
-![imagen](https://i.ibb.co/8n5hZHWs/cara.png)
+
+3. **Configurar permisos de escritura (Necesario para el Uploader):**
+   ```bash
+   sudo chmod 777 /var/www/html/
+
+4. **Iniciar Apache:**
+   ```bash
+   sudo systemctl start apache2
+5. **Acceder:**
+   ```bash
+   Abre tu navegador en http://localhost/f0r3x.php
