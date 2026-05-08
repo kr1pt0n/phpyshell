@@ -28,11 +28,7 @@
 2. **Mover al servidor web:**
    ```bash
    sudo cp f0r3x.php /var/www/html/
-
-3. **Iniciar Apache:**
-   ```bash
-   sudo systemctl start apache2
    
-4. **Acceder:**
+3. **Acceder:**
    ```bash
-   Abre tu navegador en http://localhost/f0r3x.php
+   Localiza la webshell en http://dominio.com/f0r3x.php
