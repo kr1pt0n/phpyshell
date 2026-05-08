@@ -29,14 +29,10 @@
    ```bash
    sudo cp f0r3x.php /var/www/html/
 
-
-3. **Configurar permisos de escritura (Necesario para el Uploader):**
-   ```bash
-   sudo chmod 777 /var/www/html/
-
-4. **Iniciar Apache:**
+3. **Iniciar Apache:**
    ```bash
    sudo systemctl start apache2
-5. **Acceder:**
+   
+4. **Acceder:**
    ```bash
    Abre tu navegador en http://localhost/f0r3x.php
