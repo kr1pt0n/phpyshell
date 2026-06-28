@@ -294,7 +294,7 @@ def main():
     iniciar_autocompletado()
     
     print("[*] Comandos especiales locales:")
-    print(" -> download "C:\xampp\htdocs\file.zip" /home/user/Escritorio/file.zip")
+    print(" -> download \"<archivo_remoto>\" \"<nombre_local>\"")
     print(" -> exit / clear")
     print("    >> Uso de los uploaders")
     print('''
