@@ -4,7 +4,7 @@ import sys
 import os
 
 # !! CONFIGURACIÓN: Reemplaza con la IP completa y correcta de la máquina HTB !!
-URL_SHELL = "http://192.168.1.200:8000/carpeta/script.php" 
+URL_SHELL = "http://192.168.1.200:8000/carpeta/shell.php" 
 
 # Límite de seguridad para evitar consumo excesivo de memoria (10 MB)
 MAX_BYTES = 10 * 1024 * 1024 
