@@ -168,7 +168,7 @@ def subir_archivo(ruta_local, ruta_remota):
 def main():
     global URL_SHELL
     print("\n" + "="*60)
-    print("      WEBSHELL INTERACTIVA - FIX BINARIO COMPRESIÓN")
+    print("      WEBSHELL INTERACTIVA - by kr1pt0n")
     print("="*60)
     
     URL_SHELL = escanear_y_clasificar()
