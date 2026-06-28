@@ -298,7 +298,7 @@ def main():
     print(" -> exit / clear")
     print("    >> Uso de los uploaders")
     print('''
-    -> curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/shell.php
+    -> curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/uploader.php
     
 ''')
     print("-" * 60)
