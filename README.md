@@ -120,11 +120,7 @@ python3 server.py
 
 Desde la consola:
 
-```text
-upload <archivo_local> <nombre_remoto>
-```
-
-o utilizando `curl`
+[+] Utilizando `curl`
 
 ```bash
 curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/uploader.php
@@ -135,7 +131,7 @@ curl -F "file=@/ruta/de/tu/archivo/local" http://192.168.20.10:8000/path/uploade
 # 📥 Descargar archivos
 
 ```text
-download <archivo_remoto> <nombre_local>
+download "C:\xampp\htdocs\descarga.zip" /home/user/descarga.zip
 ```
 
 ---
